@@ -3,6 +3,7 @@
 import { Product, getStockStatus } from "@/lib/mock-data";
 import { useCartStore } from "@/store/cart-store";
 import Image from "next/image";
+import { useCallback, useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
 
 const STOCK_CONFIG = {
@@ -30,11 +31,43 @@ export default function ProductCard({ product }: { product: Product }) {
 
   const isOutOfStock = status === "out";
 
-  const handleAddToCart = () => {
-    // Optimistic — updates store synchronously, no API await per spec.
+  // Debounce ref to prevent rapid click spam
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const clickCountRef = useRef(0);
+
+  // Debounced Add to Cart Handler
+  const handleAddToCart = useCallback(() => {
+    if (isOutOfStock) return;
+
+    // Optimistically update store immediately for responsive UX
     addItem(product);
-    toast.success(`${product.name} added to cart`);
-  };
+    clickCountRef.current += 1;
+
+    // Debounce the toast notification so rapid clicks within 350ms collapse into a single toast
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      const count = clickCountRef.current;
+      toast.success(
+        count > 1
+          ? `Added ${count}x ${product.name} to cart`
+          : `${product.name} added to cart`,
+        { id: `add-cart-${product.id}` }
+      );
+      clickCountRef.current = 0;
+    }, 350);
+  }, [isOutOfStock, addItem, product]);
+
+  // Clean up timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-md hover:shadow-slate-200/60">
