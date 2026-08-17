@@ -100,7 +100,14 @@ function Profile() {
                   </div>
                 )}
                 <div className="min-w-0">
-                  <p className="truncate text-xs font-semibold text-white">{name}</p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="truncate text-xs font-semibold text-white">{name}</p>
+                    {user.role && (
+                      <span className="rounded bg-orange-500/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-orange-400">
+                        {user.role}
+                      </span>
+                    )}
+                  </div>
                   <p className="truncate text-[10px] text-slate-400">{user.email}</p>
                 </div>
               </div>

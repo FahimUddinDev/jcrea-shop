@@ -1,4 +1,8 @@
+import { useCartStore } from "@/store/cart-store";
 function CartCount() {
+  const itemCount = useCartStore((state) =>
+    state.items.reduce((sum, item) => sum + item.quantity, 0),
+  );
   return (
     <div
       role="status"
@@ -22,13 +26,15 @@ function CartCount() {
         />
       </svg>
 
-      <span
-        key={1}
-        aria-hidden="true"
-        className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 animate-bump items-center justify-center rounded-full bg-indigo-600 px-1 text-[10px] font-semibold leading-none text-white"
-      >
-        1
-      </span>
+      {itemCount > 0 && (
+        <span
+          key={itemCount}
+          aria-hidden="true"
+          className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 animate-bump items-center justify-center rounded-full bg-indigo-600 px-1 text-[10px] font-semibold leading-none text-white"
+        >
+          {itemCount}
+        </span>
+      )}
     </div>
   );
 }
