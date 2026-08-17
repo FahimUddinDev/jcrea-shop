@@ -21,12 +21,6 @@ export default function Navbar() {
           {/* Divider */}
           <div className="hidden h-6 w-px bg-slate-200 sm:block" />
           <Profile />
-          <Link
-            href="/login"
-            className="rounded-lg bg-orange-500 px-3.5 py-1.5 text-sm font-medium text-white transition hover:bg-orange-700"
-          >
-            Sign in
-          </Link>
         </div>
       </div>
     </header>

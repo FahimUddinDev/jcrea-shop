@@ -1,4 +1,13 @@
-function LoginCard() {
+"use client";
+
+import { signIn } from "next-auth/react";
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+
+function LoginCardInner() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard";
+
   return (
     <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-xl shadow-slate-200/60">
       {/* Subtle top accent line */}
@@ -24,6 +33,7 @@ function LoginCard() {
       {/* Google Button */}
       <button
         type="button"
+        onClick={() => signIn("google", { callbackUrl })}
         className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 active:scale-[0.98]"
       >
         <svg viewBox="0 0 24 24" className="h-5 w-5 flex-shrink-0">
@@ -68,4 +78,12 @@ function LoginCard() {
   );
 }
 
-export default LoginCard;
+export default function LoginCard() {
+  return (
+    <Suspense fallback={
+      <div className="w-full max-w-md h-80 animate-pulse rounded-3xl bg-slate-100" />
+    }>
+      <LoginCardInner />
+    </Suspense>
+  );
+}
