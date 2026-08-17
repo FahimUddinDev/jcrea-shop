@@ -38,7 +38,14 @@ export default function CheckoutButton() {
         body: JSON.stringify({ forceFail }),
       });
 
-      const data = await res.json();
+      const contentType = res.headers.get("content-type");
+      let data: any = {};
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        data = { message: text || "Checkout service error" };
+      }
 
       if (!res.ok) {
         throw new Error(data.message || "Checkout failed");
