@@ -39,11 +39,11 @@ export default function ProductCard({ product }: { product: Product }) {
   const handleAddToCart = useCallback(() => {
     if (isOutOfStock) return;
 
-    // Optimistically update store immediately for responsive UX
+    // Optimistically update store immediately
     addItem(product);
     clickCountRef.current += 1;
 
-    // Debounce the toast notification so rapid clicks within 350ms collapse into a single toast
+    // Debounce
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
@@ -54,7 +54,7 @@ export default function ProductCard({ product }: { product: Product }) {
         count > 1
           ? `Added ${count}x ${product.name} to cart`
           : `${product.name} added to cart`,
-        { id: `add-cart-${product.id}` }
+        { id: `add-cart-${product.id}` },
       );
       clickCountRef.current = 0;
     }, 350);
