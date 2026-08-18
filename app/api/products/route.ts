@@ -1,10 +1,8 @@
 import { products } from "@/lib/mock-data";
 import { NextRequest, NextResponse } from "next/server";
 
-/**
- * GET /api/products
+// / GET /api/products
 
- */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 

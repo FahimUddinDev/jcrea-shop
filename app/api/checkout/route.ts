@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
   //  API delay 1500ms
   await new Promise((resolve) => setTimeout(resolve, 1500));
 
-  // Simulated 15% random failure rate or explicit forceFail for testing
+  //  15% random failure rate or explicit forceFail for testing
   const failed = forceFail || Math.random() < 0.15;
 
   if (failed) {

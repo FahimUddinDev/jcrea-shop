@@ -41,14 +41,7 @@ export default function CheckoutButton() {
         body: JSON.stringify({ forceFail }),
       });
 
-      const contentType = res.headers.get("content-type");
-      let data: { message?: string } = {};
-      if (contentType && contentType.includes("application/json")) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        data = { message: text || "Checkout service error" };
-      }
+      const data: { message?: string } = await res.json().catch(() => ({}));
 
       if (!res.ok) {
         throw new Error(data.message || "Checkout failed");
@@ -61,6 +54,7 @@ export default function CheckoutButton() {
         err instanceof Error
           ? err.message
           : "Checkout failed. Please try again.";
+
       toast.error(
         (t) => (
           <div className="flex items-center gap-2">
@@ -70,7 +64,7 @@ export default function CheckoutButton() {
                 toast.dismiss(t.id);
                 handleCheckout(false);
               }}
-              className="rounded bg-red-600 px-2 py-1 text-xs font-semibold text-white hover:bg-red-700"
+              className="rounded bg-red-600 px-2 py-1 text-xs font-semibold text-white transition hover:bg-red-700"
             >
               Retry
             </button>

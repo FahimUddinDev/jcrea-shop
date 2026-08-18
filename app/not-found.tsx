@@ -3,7 +3,6 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <main className="relative flex min-h-[calc(100vh-66px)] flex-col items-center justify-center overflow-hidden bg-slate-50 px-6 py-20 text-center">
-      {/* Subtle background glow */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/10 blur-3xl" />
       <div className="pointer-events-none absolute left-1/3 top-1/3 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/10 blur-3xl" />
 
@@ -24,8 +23,8 @@ export default function NotFound() {
         </h2>
 
         <p className="mt-3 text-sm text-slate-500 sm:text-base">
-          Sorry, we couldn&apos;t find the page you&apos;re looking for. It might have
-          been moved or deleted.
+          Sorry, we couldn&apos;t find the page you&apos;re looking for. It
+          might have been moved or deleted.
         </p>
 
         {/* Action Buttons */}

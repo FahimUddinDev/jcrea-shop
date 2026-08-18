@@ -2,6 +2,7 @@
 
 import { Product, getStockStatus } from "@/lib/mock-data";
 import { useCartStore } from "@/store/cart-store";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
@@ -25,6 +26,10 @@ const STOCK_CONFIG = {
 } as const;
 
 export default function ProductCard({ product }: { product: Product }) {
+  const { data: session } = useSession();
+  const role = session?.user?.role;
+  const isAdmin = role === "admin";
+
   const status = getStockStatus(product.stock);
   const config = STOCK_CONFIG[status];
   const addItem = useCartStore((state) => state.addItem);
@@ -87,6 +92,22 @@ export default function ProductCard({ product }: { product: Product }) {
             {config.label}
           </span>
         )}
+
+        {/* Role-restricted UI Action: Admin Edit Stock Button */}
+        {isAdmin && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              toast.success(
+                `[${role?.toUpperCase()}] Managing stock for ${product.name} (Qty: ${product.stock})`,
+              );
+            }}
+            className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-slate-900/80 px-2.5 py-1 text-xs font-bold text-orange-400 backdrop-blur-md transition hover:bg-slate-900 active:scale-95"
+          >
+            ⚙️ Edit Stock
+          </button>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col gap-1 p-4">
@@ -100,14 +121,16 @@ export default function ProductCard({ product }: { product: Product }) {
             ${product.price.toLocaleString()}
           </span>
 
-          <button
-            type="button"
-            disabled={isOutOfStock}
-            onClick={handleAddToCart}
-            className="rounded-lg bg-indigo-600 px-3.5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 disabled:active:scale-100"
-          >
-            {isOutOfStock ? "Out of stock" : "Add to cart"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled={isOutOfStock}
+              onClick={handleAddToCart}
+              className="rounded-lg bg-indigo-600 px-3.5 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 active:scale-95 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 disabled:active:scale-100"
+            >
+              {isOutOfStock ? "Out of stock" : "Add to cart"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

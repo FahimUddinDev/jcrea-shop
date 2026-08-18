@@ -1,7 +1,7 @@
 import Navbar from "@/components/global/Navbar";
 import type { Metadata } from "next";
-import Providers from "./providers";
 import "./globals.css";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: "jcrea shop",

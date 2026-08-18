@@ -3,6 +3,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "react-hot-toast";
 
 function Profile() {
   const [open, setOpen] = useState(false);
@@ -43,7 +44,7 @@ function Profile() {
             aria-haspopup="true"
             aria-expanded={open}
           >
-            {/* Avatar: image or initial */}
+            {/* Avatar image or initial */}
             {image ? (
               <Image
                 src={image}
@@ -63,7 +64,7 @@ function Profile() {
               {name.split(" ")[0]}
             </span>
 
-            {/* Chevron */}
+            {/* Chevron icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
@@ -83,7 +84,6 @@ function Profile() {
           {/* Dropdown menu */}
           {open && (
             <div className="absolute right-0 mt-2 w-48 rounded-xl border border-slate-700 bg-gray-900 py-1 shadow-xl ring-1 ring-black/20 animate-fade-in">
-
               {/* User info header */}
               <div className="flex items-center gap-2.5 px-4 py-3 border-b border-slate-700">
                 {image ? (
@@ -101,14 +101,18 @@ function Profile() {
                 )}
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <p className="truncate text-xs font-semibold text-white">{name}</p>
+                    <p className="truncate text-xs font-semibold text-white">
+                      {name}
+                    </p>
                     {user.role && (
                       <span className="rounded bg-orange-500/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-orange-400">
                         {user.role}
                       </span>
                     )}
                   </div>
-                  <p className="truncate text-[10px] text-slate-400">{user.email}</p>
+                  <p className="truncate text-[10px] text-slate-400">
+                    {user.email}
+                  </p>
                 </div>
               </div>
 
@@ -135,6 +139,39 @@ function Profile() {
                 Dashboard
               </Link>
 
+              {/* Role-restricted UI Action: Admin Settings */}
+              {user.role === "admin" && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    toast.success("Admin Panel Opened");
+                  }}
+                  className="flex w-full items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-orange-400 transition hover:bg-orange-500/10"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.75}
+                    stroke="currentColor"
+                    className="h-4 w-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  Admin Settings
+                </button>
+              )}
+
               {/* Divider */}
               <div className="my-1 h-px bg-slate-700" />
 
@@ -155,7 +192,7 @@ function Profile() {
           )}
         </div>
       ) : (
-        // Not logged in → Sign in button
+        // Sign in button
         <Link
           href="/login"
           className="rounded-lg bg-orange-500 px-3.5 py-1.5 text-sm font-medium text-white transition hover:bg-orange-700"

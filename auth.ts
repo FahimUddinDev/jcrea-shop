@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import type { UserRole } from "@/types/next-auth";
+import { cookies } from "next/headers";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -18,7 +19,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = "admin";
+        try {
+          const cookieStore = cookies();
+          const preferredRole = cookieStore.get("preferred_role")?.value as UserRole;
+          token.role = preferredRole === "admin" ? "admin" : "user";
+        } catch {
+          token.role = "user";
+        }
       }
       return token;
     },
@@ -30,4 +37,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 });
+
 

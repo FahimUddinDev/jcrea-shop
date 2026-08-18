@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JCrea Shop
 
-## Getting Started
+# Live Demo
 
-First, run the development server:
+URL: https://jcrea-shop.vercel.app
 
-```bash
+---
+
+# Setup Instructions
+
+# 1. Clone the repository
+
+git clone https://github.com/FahimUddinDev/jcrea-shop.git
+cd jcrea-shop
+
+# 2. Install dependencies
+
+npm install
+
+# 3. Configure environment variables
+
+Create a ".env" file in the root directory:
+
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+NEXTAUTH_SECRET=your_nextauth_secret
+AUTH_SECRET=your_nextauth_secret
+
+# 4. Run development server
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Open http://localhost:3000 in your browser.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Tech Decisions: Why Zustand vs Redux?
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+We chose "Zustand" over "Redux Toolkit" for this application because:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Zero Boilerplate: No actions, reducers, or complex store wrappers needed.
+- Tiny Bundle Size: less footprint compared to Redux Toolkit.
+- React Context Free: Prevents unnecessary full-tree re-renders when updating items.
+- Built-in LocalStorage Persistence: Simple middleware (`persist`) handles saving data.
 
-## Learn More
+# Bonus Features Completed
 
-To learn more about Next.js, take a look at the following resources:
+-Edge Middleware :Middleware automatically redirects unauthenticated users to `/login` and authenticated users away from `/login` directly to `/dashboard`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-Role-Based Access Control (RBAC): Separate **Admin** and **User** sign-in options; and login as admin you will see extra ui top of dashboard and role-restricted actions `Add New Product` and `Edit Stock` buttons are automatically hidden for user accounts.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+-Cart Persistence: Immediate cart Persistence using zustand presist middleware.
