@@ -1,9 +1,11 @@
+import type { UserRole } from "@/types/next-auth";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-import type { UserRole } from "@/types/next-auth";
 import { cookies } from "next/headers";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  trustHost: true,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -21,7 +23,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         try {
           const cookieStore = cookies();
-          const preferredRole = cookieStore.get("preferred_role")?.value as UserRole;
+          const preferredRole = cookieStore.get("preferred_role")
+            ?.value as UserRole;
           token.role = preferredRole === "admin" ? "admin" : "user";
         } catch {
           token.role = "user";
@@ -37,5 +40,3 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 });
-
-
