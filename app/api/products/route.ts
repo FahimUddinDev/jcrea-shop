@@ -3,12 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 /**
  * GET /api/products
- *
- * Query params (all optional — for exercising the UI's loading /
- * error / empty states during development):
- *   ?delay=1500   -> wait N ms before responding (test skeleton loaders)
- *   ?error=1      -> respond with a 500 error (test error + Retry UI)
- *   ?empty=1      -> respond with an empty array (test empty state UI)
+
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);

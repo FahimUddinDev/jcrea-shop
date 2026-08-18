@@ -7,7 +7,7 @@ function CartCount() {
     <div
       role="status"
       aria-live="polite"
-      aria-label={`Cart, 1 item`}
+      aria-label={`Cart, ${itemCount} item`}
       className="relative flex h-10 w-10 items-center justify-center rounded-full text-white"
     >
       <svg

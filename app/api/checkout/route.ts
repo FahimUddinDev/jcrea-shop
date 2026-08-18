@@ -1,9 +1,8 @@
-import { authOptions } from "@/auth";
-import { getServerSession } from "next-auth";
+import { auth } from "@/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session?.user) {
     return NextResponse.json(
@@ -15,7 +14,7 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}));
   const forceFail = body?.forceFail === true;
 
-  // Simulate API processing delay per spec (1500ms)
+  //  API delay 1500ms
   await new Promise((resolve) => setTimeout(resolve, 1500));
 
   // Simulated 15% random failure rate or explicit forceFail for testing

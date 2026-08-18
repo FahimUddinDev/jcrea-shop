@@ -14,10 +14,13 @@ export default function CheckoutButton() {
 
   const [loading, setLoading] = useState(false);
 
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
 
   const handleCheckout = async (forceFail = false) => {
-    // 1. Session check — if not logged in, redirect to login page with callbackUrl
+    //if not logged in, redirect to login page with callbackUrl
     if (status !== "authenticated" || !session) {
       toast.error("Please sign in to proceed to checkout");
       router.push("/login?callbackUrl=/dashboard");
@@ -39,7 +42,7 @@ export default function CheckoutButton() {
       });
 
       const contentType = res.headers.get("content-type");
-      let data: any = {};
+      let data: { message?: string } = {};
       if (contentType && contentType.includes("application/json")) {
         data = await res.json();
       } else {
@@ -53,11 +56,15 @@ export default function CheckoutButton() {
 
       toast.success(data.message || "Order placed successfully!");
       clearCart();
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Checkout failed. Please try again.";
       toast.error(
         (t) => (
           <div className="flex items-center gap-2">
-            <span>{err.message || "Checkout failed. Please try again."}</span>
+            <span>{errorMessage}</span>
             <button
               onClick={() => {
                 toast.dismiss(t.id);
